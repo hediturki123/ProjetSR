@@ -17,7 +17,6 @@
 // On déclare l'adresse du serveur.
 struct sockaddr_in address;
 
-
 /**
 * Cette fonction d'initialisation permet de préparer la socket d'écoute (création avec "socket()" et attachement avec "bind()"), et l'ouverture du service avec "listen()".
 * A chaque appel de fonction, on vérfie si tout se passe bien, sinon on affiche un message d'erreur sur la sortie standard.

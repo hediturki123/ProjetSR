@@ -2,7 +2,7 @@
 CC=gcc
 
 # Options du compilateur
-CFLAGS=-Wall -std=c11 -Ihdr
+CFLAGS=-Wall -Ihdr
 
 # Listes des fichiers objets
 OBJS_S=obj/server.o
@@ -16,14 +16,14 @@ all: $(EXEC)
 obj/%.o: src/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
-server:
-	$(CC) -o $@ obj/server.o
+server: $(OBJS_S)
+	$(CC) -o $@ $^
 
-client:
-	$(CC) -o $@ obj/client.o
+client: $(OBJS_C)
+	$(CC) -o $@ $^
 
 clean:
-	rm -f *.o $(OBJS)
+	rm -f obj/*.o
 
 mrproper: clean
 	rm -f $(EXEC)

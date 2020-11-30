@@ -15,7 +15,7 @@ void init (int noport, int *lsocket) {
 
     // On vérifie que le numéro de port est valide, i.e. il doit être entre 0 et 65535 (USHRT_MAX).
     if (noport < 0 || noport >= USHRT_MAX) {
-        fprintf(stderr, "Le numéro du port : %d est incorrect\n", noport);
+        fprintf(stderr, "Le numéro du port %d est incorrect\n", noport);
         exit(EXIT_FAILURE);
     }
 
@@ -55,7 +55,7 @@ void service_loop (int lsocket, socklen_t *clientlen) {
             exit(EXIT_FAILURE);
         }
         //TODO
-        fork();
+        //fork();
     }
 }
 

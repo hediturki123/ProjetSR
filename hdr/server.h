@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <signal.h>
 #include <limits.h> //On a fait cet import pour vérifier que la valeur du port passée en entrée ne dépasse pas sa limite de taille.
 
 #ifndef __SERVER_H__
@@ -15,6 +16,7 @@
 
 // On déclare l'adresse du serveur.
 struct sockaddr_in address;
+
 
 /**
 * Cette fonction d'initialisation permet de préparer la socket d'écoute (création avec "socket()" et attachement avec "bind()"), et l'ouverture du service avec "listen()".

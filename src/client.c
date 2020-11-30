@@ -8,9 +8,9 @@ void init (int noport, int *clientsocket) {
         exit(EXIT_FAILURE);
     }
 
-    //gethostbyname(h->h_name);
+    struct hostent *h = gethostbyname(h->h_name);
     address.sin_family = AF_INET;
-    address.sin_port = h->h_addr;
+   // address.sin_port = h->h_addr;
     address.sin_addr.s_addr = htons(noport);
 
     connect(clientsocket, (struct sockaddr *)&address, sizeof(struct sockaddr *));
@@ -30,7 +30,7 @@ int main(int argc, char *argv[]) {
 
     init (noport, &clientsocket);
 
-    server_interaction(clientsocket);
+    server_interaction (clientsocket);
 
     return 0;
 }

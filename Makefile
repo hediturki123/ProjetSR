@@ -5,18 +5,24 @@ CC=gcc
 CFLAGS=-Wall -std=c11
 
 # Listes des dépendances et des fichiers objets
-DEPS=hdr/server.h
-OBJS=obj/server.o
+DEPS_S=hdr/server.h
+OBJS_S=obj/server.o
+
+DEPS_C=hdr/client.h
+OBJS_C=obj/client.o
 
 # Nom de l'exécutable
-EXEC=server
+EXEC=server client
 
 all: $(EXEC)
 
 obj/%.o: src/%.c
 	$(CC) -c -o $@ $< $(CFLAGS)
 
-server: $(OBJS)
+server: $(OBJS_S)
+	$(CC) -o $@ $^ $(CFLAGS)
+
+client: $(OBJS_C)
 	$(CC) -o $@ $^ $(CFLAGS)
 
 clean:

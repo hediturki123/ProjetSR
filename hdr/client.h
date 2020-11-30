@@ -6,9 +6,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
+#include <netdb.h>
 
 
-struct hostent *h;
+
 
 struct sockaddr_in address;
 

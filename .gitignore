@@ -1,0 +1,6 @@
+# On ignore le fichiers .O générés.
+obj/*
+
+# On ignore les exécutables du client et du serveur.
+server
+client

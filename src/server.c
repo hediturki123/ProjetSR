@@ -1,14 +1,18 @@
-#include "../hdr/server.h"
+#include "server.h"
+
+void end_child(int sig) {
+    
+}
 
 void init (int noport, int *lsocket) {
 
-    /*struct sigaction ac;
+    struct sigaction ac;
     
     ac.sa_handler = end_child;
     ac.sa_flags = SA_RESTART;
 
     sigaction(SIGCHLD, &ac, NULL);
-*/
+
     // On vérifie que le numéro de port est valide, i.e. il doit être entre 0 et 65535 (USHRT_MAX).
     if (noport < 0 || noport >= USHRT_MAX) {
         fprintf(stderr, "Le numéro du port : %d est incorrect\n", noport);

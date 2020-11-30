@@ -2,13 +2,10 @@
 CC=gcc
 
 # Options du compilateur
-CFLAGS=-Wall -std=c11
+CFLAGS=-Wall -std=c11 -Ihdr
 
-# Listes des dépendances et des fichiers objets
-DEPS_S=hdr/server.h
+# Listes des fichiers objets
 OBJS_S=obj/server.o
-
-DEPS_C=hdr/client.h
 OBJS_C=obj/client.o
 
 # Nom de l'exécutable
@@ -17,13 +14,13 @@ EXEC=server client
 all: $(EXEC)
 
 obj/%.o: src/%.c
-	$(CC) -c -o $@ $< $(CFLAGS)
+	$(CC) $(CFLAGS) -c $< -o $@
 
-server: $(OBJS_S)
-	$(CC) -o $@ $^ $(CFLAGS)
+server:
+	$(CC) -o $@ obj/server.o
 
-client: $(OBJS_C)
-	$(CC) -o $@ $^ $(CFLAGS)
+client:
+	$(CC) -o $@ obj/client.o
 
 clean:
 	rm -f *.o $(OBJS)

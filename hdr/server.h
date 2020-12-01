@@ -3,9 +3,11 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <unistd.h>
+#include <sys/wait.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <signal.h>
+#include <sys/ioctl.h>
 #include <limits.h> //On a fait cet import pour vérifier que la valeur du port passée en entrée ne dépasse pas sa limite de taille.
 
 #ifndef __SERVER_H__
@@ -16,6 +18,12 @@
 
 // On déclare l'adresse du serveur.
 struct sockaddr_in address;
+
+/**
+ * A la mort de chaque sous-processus du serveur, celui-ci doit confirmer leur mort pour ne pas laisser de zombies.
+ * @param signo Numéro du signal reçu.
+ */
+void end_child(int signo);
 
 /**
 * Cette fonction d'initialisation permet de préparer la socket d'écoute (création avec "socket()" et attachement avec "bind()"), et l'ouverture du service avec "listen()".

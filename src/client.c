@@ -71,20 +71,23 @@ void wait_response (int clientsocket, char cmdname[CMDNAME_MAXSIZE]) {
        
         char aut[64];
         char temp;
+        int booknumber;
         printf("Auteur : ");
-        scanf("%c",&temp);
+        scanf("%c", &temp);
         scanf("%[^\n]", aut);
-            
-        write(clientsocket, aut, sizeof(aut));
+        
+        write(clientsocket, aut, 64);
+        printf("%s\n", aut);
+        read(clientsocket, &booknumber, sizeof(int));
 
-        read(clientsocket, &book, sizeof(book_t));
-
-        if (strcmp(book.author, aut)) {
+        if (booknumber == 0) {
              printf("Cet auteur n'existe pas.\n");
         } else {
-            printf("%s (%s)\n", book.title, book.genre);
+            for (int i = 0; i < booknumber; i++) {
+                read(clientsocket, &book, sizeof(book_t));
+                printf("%s (%s)\n", book.title, book.genre);
+            }
         }
-
     }
 }
 

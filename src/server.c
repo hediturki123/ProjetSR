@@ -114,11 +114,28 @@ void read_command(int nlsock, char cmdname[CMDNAME_MAXSIZE], book_t *books) {
     } else if (!strcmp(cmdname, "author")){
         printf("Demande d'auteur... ");
         char author[64];
-        read(nlsock, author, sizeof(author));
+        
+        read(nlsock, author, 64);
         printf("%s\n", author);
+        int tab[20];
+        printf("--------------------");
+        
+        printf("%ld", sizeof(*books));
 
-        int a = get_author(author, books);
-        write (nlsock, &(books[a]), sizeof(book_t));
+        for(int i = 0; i < 20 ; i++){
+            tab[i] = -1;
+        }
+        
+        int booknumber = get_author(author, books, tab);
+        printf("%d", booknumber);
+
+        write(nlsock, &booknumber, sizeof(int));
+
+        if (booknumber != 0) {
+            for(int j = 0; j < booknumber; j++) {
+                write (nlsock, &(books[j]), sizeof(book_t));
+            }
+        }
     }
 
     memset(cmdname, 0, CMDNAME_MAXSIZE);

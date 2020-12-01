@@ -7,6 +7,8 @@
 
 #define MAX_LINE 4096
 
+#define DB_COL_NB 4
+
 typedef struct book_t {
     int ref;
     char author[64];
@@ -17,5 +19,9 @@ typedef struct book_t {
 char* getfield(char* line, int num);
 
 int linesnb(FILE *f);
+
+FILE *open_database(char *filename);
+
+void populate_books(FILE *dbfile, book_t *books);
 
 #endif // !__DATABASE_H__

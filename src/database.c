@@ -24,6 +24,7 @@ int linesnb(FILE *f) {
         if (c == '\n') // On incrémente le compteur à chaque saut de ligne.
             count = count + 1;
 
+    rewind(f);
     return count;
 }
 
@@ -45,25 +46,27 @@ FILE *open_database(char *filename) {
 
 
 void populate_books(FILE *dbfile, book_t *books) {
-    char *line = "";
+    char *line = (char *)malloc(MAX_LINE);
+    char * g;
     int count;
-    while (fgets(line, MAX_LINE, dbfile) != NULL) {
-        printf("%s",line);
+    
+    while ((g = fgets(line, MAX_LINE, dbfile)) != NULL) {
         int i = 0;
-        for (i = 0; i < DB_COL_NB; i++) {
-            char *field = getfield(line, i);
+        for (i = 1; i < DB_COL_NB + 1; i++) {
+            char *field = strdup(line);
+           
             switch (i) {
-                case 0:
-                    books[count].ref = atoi(field);
-                    break;
                 case 1:
-                    strcpy(books[count].author, field);
+                    books[count].ref = atoi(getfield(field, i));
                     break;
                 case 2:
-                    strcpy(books[count].title, field);
+                    strcpy(books[count].author, getfield(field, i));
                     break;
                 case 3:
-                    strcpy(books[count].genre, field);
+                    strcpy(books[count].title, getfield(field, i));
+                    break;
+                case 4:
+                    strcpy(books[count].genre, getfield(field, i));
                     break;
                 default:
                     break;

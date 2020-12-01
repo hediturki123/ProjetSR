@@ -110,14 +110,14 @@ int main (int argc, char* argv[]) {
     socklen_t clientlen = (socklen_t) sizeof(address); // On récupère la taille de l'adresse du client.
 
     FILE *dbfile = open_database("books.csv"); // Récupération du document base de données.
-    const int ln = linesnb(dbfile);
+    const int ln = linesnb(dbfile) + 1;
     if (ln < 0) {
         fprintf(stderr, "Le fichier BDD est vide !\n");
         exit(EXIT_FAILURE);
     }
     book_t books[ln]; // Tableau contenant les livres contenus dans la BDD.
 
-    printf("%d\n", linesnb(dbfile)); // TEST
+    printf("%d\n", ln); // TEST
 
     // On récupère le numéro de port passé en paramètre.
     noport = atoi(argv[1]);
@@ -128,7 +128,7 @@ int main (int argc, char* argv[]) {
     // Préparation de la BDD.
     populate_books(dbfile, books);
 
-    //printf("%d : %s, %s (%s)\n", books[0].ref, books[0].author, books[0].title, books[0].genre);
+    printf("%d : %s, %s (%s)\n", books[0].ref, books[0].author, books[0].title, books[0].genre);
 
     // Démarrage de la boucle de service et communication avec les clients.
     service_loop(lsocket, &clientlen);

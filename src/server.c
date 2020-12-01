@@ -1,5 +1,5 @@
 #include "server.h"
-#include <string.h>
+
 void end_child(int signo) {
     wait(NULL);
 }
@@ -57,7 +57,6 @@ void init (int noport, int *lsocket) {
     } else {
         printf("Ouverture du service : OK\n");
     }
-
 }
 
 
@@ -108,7 +107,7 @@ void service_loop (int lsocket, socklen_t *clientlen) {
 int main (int argc, char* argv[]) {
 
     int lsocket, noport; // Déclaration du socket d'écoute et de son port.
-    socklen_t clientlen = (socklen_t)sizeof(address); // On récupère la taille de l'adresse du client.
+    socklen_t clientlen = (socklen_t) sizeof(address); // On récupère la taille de l'adresse du client.
 
     // On récupère le numéro de port passé en paramètre.
     noport = atoi(argv[1]);

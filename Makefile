@@ -5,8 +5,8 @@ CC=gcc
 CFLAGS=-Wall -Ihdr
 
 # Listes des fichiers objets
-OBJS_S=obj/server.o
-OBJS_C=obj/client.o
+OBJS_S=obj/server.o obj/database.o
+OBJS_C=obj/client.o obj/database.o
 
 # Nom de l'exécutable
 EXEC=server client

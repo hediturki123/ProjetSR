@@ -7,8 +7,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <signal.h>
-#include <sys/ioctl.h>
-#include <limits.h> //On a fait cet import pour vérifier que la valeur du port passée en entrée ne dépasse pas sa limite de taille.
+#include <string.h>
+#include <limits.h>
+#include "database.h"
 
 #ifndef __SERVER_H__
 #define __SERVER_H__

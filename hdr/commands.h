@@ -5,6 +5,6 @@
 
 int get_reference(int reference, book_t *books);
 
-void get_author(char author[64]);
+int get_author(char author[64], book_t *books);
 
 #endif // !__COMMANDS_H__

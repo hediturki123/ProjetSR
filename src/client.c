@@ -41,10 +41,14 @@ void server_interaction(int clientsocket) {
 }
 
 void wait_response (int clientsocket, char cmdname[128]) {
-    if (!strcmp(cmdname, "reference")) {
-        int ref;
-        book_t book;
+    
+    int ref;
+    char aut[64];
+    char temp;
+    book_t book;
 
+    if (!strcmp(cmdname, "reference")) {
+        
         printf("Référence : ");
         scanf("%d", &ref);
 
@@ -58,7 +62,20 @@ void wait_response (int clientsocket, char cmdname[128]) {
         }
 
     } else if (!strcmp(cmdname, "author")){
-        // TODO
+        printf("Auteur : ");
+        scanf("%c",&temp);
+        scanf("%[^\n]", aut);
+            
+        write(clientsocket, aut, sizeof(aut));
+
+        read(clientsocket, &book, sizeof(book_t));
+
+        if (strcmp(book.author, aut)) {
+             printf("Cet auteur n'existe pas.\n");
+        } else {
+            printf("%s (%s)\n", book.title, book.genre);
+        }
+
     }
 }
 

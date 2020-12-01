@@ -101,9 +101,11 @@ void service_loop (int lsocket, socklen_t *clientlen, book_t *books) {
 
 
 void read_command(int nlsock, char cmdname[128], book_t *books) {
+    int ref;
+    char buffer[128];
 
     if (!strcmp(cmdname, "reference")) {
-        int ref;
+        
 
         printf("Demande de référence... ");
         read(nlsock, &ref, sizeof(int));
@@ -112,8 +114,13 @@ void read_command(int nlsock, char cmdname[128], book_t *books) {
         int id = get_reference(ref, books);
         write (nlsock, &(books[id]), sizeof(book_t));
 
-    } else if (!strcmp(cmdname, "auteur")){
-        // TODO
+    } else if (!strcmp(cmdname, "author")){
+        printf("Demande d'auteur... ");
+        read(nlsock, buffer, sizeof(buffer));
+        printf("%s\n", buffer);
+
+        int a = get_author(buffer, books);
+        write (nlsock, &(books[a]), sizeof(book_t));
     }
 
     memset(cmdname, 0, 128);
@@ -145,7 +152,7 @@ int main (int argc, char* argv[]) {
     // Préparation de la BDD.
     populate_books(dbfile, books);
 
-    printf("%d %s", books[9].ref, books[9].title);
+   // printf("%d %s", books[9].ref, books[9].title);
 
     // Démarrage de la boucle de service et communication avec les clients.
     service_loop(lsocket, &clientlen, books);

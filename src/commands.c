@@ -10,6 +10,14 @@ int get_reference(int reference, book_t *books) {
     return -1;
 }
 
-void get_author(char author[64]) {
+int get_author(char author[64], book_t *books) {
 
+    int i;
+    
+    for (i = 0; i < sizeof(*books); i++) {
+        if (!strcmp(books[i].author, author)) {
+            return i;        
+        }
+    }
+    return -1;
 }

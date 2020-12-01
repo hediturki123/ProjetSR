@@ -44,11 +44,11 @@ void server_interaction(int clientsocket) {
 }
 
 void wait_response (int clientsocket, char cmdname[CMDNAME_MAXSIZE]) {
+    
     book_t book;
+    
     if (!strcmp(cmdname, "reference") || !strcmp(cmdname, "ref")) {
         int ref;
-        
-        
 
         printf("Indiquez la référence du livre voulu :\n> ");
         scanf("%d", &ref);
@@ -67,7 +67,8 @@ void wait_response (int clientsocket, char cmdname[CMDNAME_MAXSIZE]) {
         }
         printf("=====================\n");
 
-    } else if (!strcmp(cmdname, "author")){
+    } else if (!strcmp(cmdname, "author")) {
+       
         char aut[64];
         char temp;
         printf("Auteur : ");

@@ -10,6 +10,7 @@
 #include <string.h>
 #include <limits.h>
 #include "database.h"
+#include "commands.h"
 
 #ifndef __SERVER_H__
 #define __SERVER_H__

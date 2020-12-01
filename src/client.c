@@ -32,12 +32,24 @@ void init (int noport, int *clientsocket) {
 
 void server_interaction(int clientsocket) {
     //write and read
-    char buf[50] = "test";
+    char buf[1024];
+   
+    printf("> ");
+    scanf("%s", buf);
 
     write(clientsocket, buf, sizeof(buf));
+    wait_response(clientsocket, buf);
+}
 
-    read(clientsocket, buf, sizeof(buf));
-    printf("%s\n", buf);
+void wait_response (int clientsocket, char buffer[1024]) {
+
+    if (!strcmp(buffer, "reference")) {
+        book_t book;
+        read(clientsocket, &book, sizeof(book_t));
+
+    } else if (!strcmp(buffer, "author")){
+
+    }
 }
 
 int main(int argc, char *argv[]) {

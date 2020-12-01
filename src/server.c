@@ -60,12 +60,12 @@ void init (int noport, int *lsocket) {
 }
 
 
-void service_loop (int lsocket, socklen_t *clientlen) {
+void service_loop (int lsocket, socklen_t *clientlen, book_t *books) {
 
     printf("Démarrage de la boucle de service...\n");
 
     int nlsock;
-    char buf[5];
+    char buf[10];
     int rd;
 
     while (1) {
@@ -87,10 +87,13 @@ void service_loop (int lsocket, socklen_t *clientlen) {
                 if (rd == -1) {
                     printf("Rien à lire\n");
                 }
-                printf("Lu (%d) : %s\n", rd, buf);
-                char msg[50] = "Le message lu par le seveur est : ";
-                strcat(msg, buf);
-                write(nlsock, msg, sizeof(msg));
+                //printf("Lu (%d) : %s\n", rd, buf);
+                //char msg[50] = "Le message lu par le seveur est : ";
+                //strcat(msg, buf);
+
+                //write(nlsock, msg, sizeof(msg));
+                
+                printf("%d\n", readcmd(nlsock, buf, books));
 
                 // Le sous-processus se termine quand il a fait tout ce qu'il avait à faire.
                 exit(EXIT_SUCCESS);
@@ -102,6 +105,22 @@ void service_loop (int lsocket, socklen_t *clientlen) {
         }
     }
 }
+
+
+int readcmd(int nlsock, char commande[1024], book_t *books) {
+    int res = -1;
+    if (!strcmp(commande, "reference")) {
+        int ref = get_reference(commande, books);
+        write (nlsock, &books[ref], sizeof(book_t));
+        
+    } else if (!strcmp(commande, "auteur")){
+        res = 2;
+    }
+    return res;
+}
+
+
+
 
 
 int main (int argc, char* argv[]) {
@@ -128,7 +147,7 @@ int main (int argc, char* argv[]) {
     // Préparation de la BDD.
     populate_books(dbfile, books);
 
-    printf("%d : %s, %s (%s)\n", books[0].ref, books[0].author, books[0].title, books[0].genre);
+    //printf("%d : %s, %s (%s)\n", books[0].ref, books[0].author, books[0].title, books[0].genre);
 
     // Démarrage de la boucle de service et communication avec les clients.
     service_loop(lsocket, &clientlen);

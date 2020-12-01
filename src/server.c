@@ -23,8 +23,13 @@ void init (int noport, int *lsocket) {
     }
 
     // On vérifie que le socket se crée correctement.
-    if ((*lsocket = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
+    *lsocket = socket(AF_INET, SOCK_STREAM, 0);
+    if (*lsocket < 0) {
         fprintf(stderr, "Le socket d'écoute n'a pas pu être créé !\n");
+        exit(EXIT_FAILURE);
+    } else if (*lsocket == 0) {
+        fprintf(stderr, "Timeout lors de la création du socket.\n");
+        close(*lsocket);
         exit(EXIT_FAILURE);
     } else {
         printf("Création du socket d'écoute : OK\n");
@@ -57,42 +62,54 @@ void init (int noport, int *lsocket) {
 
 
 void service_loop (int lsocket, socklen_t *clientlen) {
+
     printf("Démarrage de la boucle de service...\n");
+
+    int nlsock;
+    char buf[5];
+    int rd;
+
     while (1) {
 
         // On vérifie que l'acceptation de la connexion se fait correctement.
-        if (accept(lsocket, (struct sockaddr *) &address, clientlen) == -1) {
+        if ((nlsock = accept(lsocket, (struct sockaddr *) &address, clientlen)) == -1) {
             fprintf(stderr, "Erreur lors de l'acceptation de la connexion (accept).\n");
             exit(EXIT_FAILURE);
         }
 
         // Création du sous-processus de traitement du client.
-        if (fork() == 0) { // Si on est dans le fils, on traite l'information.
-            int buf;
-            int len = 0;
-            ioctl(lsocket, FIONREAD, &len);
+        switch(fork()) {
+            case -1:
+                perror("La demande du client n'a pas pu être traitée (fork).\n");
+                break;
 
-            printf("Taille pouvant être lue : %d\n",len);
-            if (len > 0) {
-                read(lsocket, &buf, len);
-                printf("Lu : %d\n", buf);
-            }
+            case 0:
+                rd = read(nlsock, buf, sizeof(buf));
+                if (rd == -1) {
+                    printf("Rien à lire\n");
+                }
+                printf("Lu (%d) : %s\n", rd, buf);
 
-            // Le sous-processus se termine quand il a fait tout ce qu'il avait à faire.
-            exit(EXIT_SUCCESS);
+                // Le sous-processus se termine quand il a fait tout ce qu'il avait à faire.
+                exit(EXIT_SUCCESS);
+
+                break;
+
+            default:
+                break;
         }
     }
 }
 
 
 int main (int argc, char* argv[]) {
-    
-    int lsocket, noport; //Déclaration du socket d'écoute et de son port.
-    socklen_t clientlen = (socklen_t)sizeof(address); //On récupère la taille de l'adresse du client.
-    
+
+    int lsocket, noport; // Déclaration du socket d'écoute et de son port.
+    socklen_t clientlen = (socklen_t)sizeof(address); // On récupère la taille de l'adresse du client.
+
     // On récupère le numéro de port passé en paramètre.
     noport = atoi(argv[1]);
-    
+
     // Initialisation du socket d'écoute.
     init(noport, &lsocket);
 
@@ -101,6 +118,6 @@ int main (int argc, char* argv[]) {
 
     // Fermeture du socket d'écoute.
     close(lsocket);
-    
+
     return 0;
  }

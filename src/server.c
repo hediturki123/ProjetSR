@@ -37,7 +37,7 @@ void init (int noport, int *lsocket) {
     }
 
     // On vérifie que l'ouverture du service se fait correctement.
-    if (!listen(*lsocket, WT_CONN)) {
+    if (listen(*lsocket, WT_CONN)) {
         fprintf(stderr, "Erreur lors de l'ouverture du service (listen).\n");
         exit(EXIT_FAILURE);
     }
@@ -46,6 +46,7 @@ void init (int noport, int *lsocket) {
 
 
 void service_loop (int lsocket, socklen_t *clientlen) {
+    char *buffer;
 
     while (1) {
 
@@ -55,7 +56,7 @@ void service_loop (int lsocket, socklen_t *clientlen) {
             exit(EXIT_FAILURE);
         }
         //TODO
-        //fork();
+        fork();
     }
 }
 
@@ -73,6 +74,8 @@ int main (int argc, char* argv[]) {
 
     // Démarrage de la boucle de service et communication avec les clients.
     service_loop(lsocket, &clientlen);
+
+    close(lsocket);
     
     return 0;
  }

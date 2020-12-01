@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <limits.h>
 #include <netdb.h>
+#include <string.h>
 
 #ifndef __CLIENT_H__
 #define __CLIENT_H__

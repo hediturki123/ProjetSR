@@ -41,6 +41,9 @@ void init (int noport, int *lsocket);
 * @param lsocket Descripteur de fichier du socket d'écoute.
 * @param clientlen Taille de l'adresse du socket.
 */
-void service_loop (int lsocket, socklen_t *clientlen);
+void service_loop (int lsocket, socklen_t *clientlen, book_t *books);
+
+
+void read_command(int nlsock, char commande[1024], book_t *books);
 
 #endif // __SERVER_H__

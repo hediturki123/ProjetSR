@@ -31,24 +31,34 @@ void init (int noport, int *clientsocket) {
 }
 
 void server_interaction(int clientsocket) {
-    //write and read
-    char buf[1024];
-   
-    printf("> ");
-    scanf("%s", buf);
+    char cmdname[128];
 
-    write(clientsocket, buf, sizeof(buf));
-    wait_response(clientsocket, buf);
+    printf("Nom de la commande : ");
+    scanf("%s", cmdname);
+
+    write(clientsocket, cmdname, sizeof(cmdname));
+    wait_response(clientsocket, cmdname);
 }
 
-void wait_response (int clientsocket, char buffer[1024]) {
-
-    if (!strcmp(buffer, "reference")) {
+void wait_response (int clientsocket, char cmdname[128]) {
+    if (!strcmp(cmdname, "reference")) {
+        int ref;
         book_t book;
+
+        printf("Référence : ");
+        scanf("%d", &ref);
+
+        write(clientsocket, &ref, sizeof(int));
+
         read(clientsocket, &book, sizeof(book_t));
+        if (book.ref != ref) {
+            printf("Le livre que vous cherchez n'existe pas.\n");
+        } else {
+            printf("%s de %s (%s)\n", book.title, book.author, book.genre);
+        }
 
-    } else if (!strcmp(buffer, "author")){
-
+    } else if (!strcmp(cmdname, "author")){
+        // TODO
     }
 }
 

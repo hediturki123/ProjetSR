@@ -1,8 +1,8 @@
 #include "commands.h"
 
 int get_reference(int reference, book_t *books) {
-    int i;    
-    for(i = 0; i < sizeof(books); i++) {
+    int i;
+    for(i = 0; i < sizeof(*books); i++) {
         if (books[i].ref == reference) {
             return i;
         }
@@ -13,6 +13,3 @@ int get_reference(int reference, book_t *books) {
 void get_author(char author[64]) {
 
 }
-
-
-

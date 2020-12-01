@@ -19,4 +19,6 @@ void init (int noport, int *clientsocket);
 
 void server_interaction(int clientsocket);
 
+void wait_response (int clientsocket, char buffer[1024]);
+
 #endif // !__CLIENT_H__

@@ -49,12 +49,11 @@ void populate_books(FILE *dbfile, book_t *books) {
     char *line = (char *)malloc(MAX_LINE);
     char * g;
     int count;
-    
+
     while ((g = fgets(line, MAX_LINE, dbfile)) != NULL) {
         int i = 0;
         for (i = 1; i < DB_COL_NB + 1; i++) {
             char *field = strdup(line);
-           
             switch (i) {
                 case 1:
                     books[count].ref = atoi(getfield(field, i));

@@ -65,8 +65,7 @@ void service_loop (int lsocket, socklen_t *clientlen, book_t *books) {
     printf("Démarrage de la boucle de service...\n");
 
     int nlsock;
-    char buf[10];
-    int rd;
+    char cmdname[128];
 
     while (1) {
 
@@ -83,17 +82,11 @@ void service_loop (int lsocket, socklen_t *clientlen, book_t *books) {
                 break;
 
             case 0:
-                rd = read(nlsock, buf, sizeof(buf));
-                if (rd == -1) {
-                    printf("Rien à lire\n");
-                }
-                //printf("Lu (%d) : %s\n", rd, buf);
-                //char msg[50] = "Le message lu par le seveur est : ";
-                //strcat(msg, buf);
+                // Récupération du nom de la commande.
+                read(nlsock, cmdname, sizeof(cmdname));
 
-                //write(nlsock, msg, sizeof(msg));
-                
-                printf("%d\n", readcmd(nlsock, buf, books));
+                // Interprétation de la commande.
+                read_command(nlsock, cmdname, books);
 
                 // Le sous-processus se termine quand il a fait tout ce qu'il avait à faire.
                 exit(EXIT_SUCCESS);
@@ -107,16 +100,23 @@ void service_loop (int lsocket, socklen_t *clientlen, book_t *books) {
 }
 
 
-int readcmd(int nlsock, char commande[1024], book_t *books) {
-    int res = -1;
-    if (!strcmp(commande, "reference")) {
-        int ref = get_reference(commande, books);
-        write (nlsock, &books[ref], sizeof(book_t));
-        
-    } else if (!strcmp(commande, "auteur")){
-        res = 2;
+void read_command(int nlsock, char cmdname[128], book_t *books) {
+
+    if (!strcmp(cmdname, "reference")) {
+        int ref;
+
+        printf("Demande de référence... ");
+        read(nlsock, &ref, sizeof(int));
+        printf("%d\n", ref);
+
+        int id = get_reference(ref, books);
+        write (nlsock, &(books[id]), sizeof(book_t));
+
+    } else if (!strcmp(cmdname, "auteur")){
+        // TODO
     }
-    return res;
+
+    memset(cmdname, 0, 128);
 }
 
 
@@ -136,8 +136,6 @@ int main (int argc, char* argv[]) {
     }
     book_t books[ln]; // Tableau contenant les livres contenus dans la BDD.
 
-    printf("%d\n", ln); // TEST
-
     // On récupère le numéro de port passé en paramètre.
     noport = atoi(argv[1]);
 
@@ -147,10 +145,10 @@ int main (int argc, char* argv[]) {
     // Préparation de la BDD.
     populate_books(dbfile, books);
 
-    //printf("%d : %s, %s (%s)\n", books[0].ref, books[0].author, books[0].title, books[0].genre);
+    printf("%d %s", books[9].ref, books[9].title);
 
     // Démarrage de la boucle de service et communication avec les clients.
-    service_loop(lsocket, &clientlen);
+    service_loop(lsocket, &clientlen, books);
 
     // Fermeture du socket d'écoute.
     close(lsocket);

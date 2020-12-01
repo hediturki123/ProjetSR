@@ -10,11 +10,10 @@ void init (int noport, int *clientsocket) {
     }
     
     
-    struct hostent *h = gethostbyname("192.168.0.1");
+    struct hostent *h = gethostbyname("192.127.0.1");
 
     address.sin_family = AF_INET;
     address.sin_port = htons(noport);
-    printf("h : %s\n", h->h_addr_list[0]);
     //address.sin_addr.s_addr = h->h_addr_list[0];
     memcpy(&address.sin_addr.s_addr, h->h_addr_list[0], sizeof(struct in_addr));
      
@@ -30,7 +29,7 @@ void init (int noport, int *clientsocket) {
 
 void server_interaction(int clientsocket) {
     //write and read
-    char *buffer = "hello !";
+    char buffer[100];;
 
     write(clientsocket, buffer, sizeof(buffer));
 
@@ -47,7 +46,7 @@ int main(int argc, char *argv[]) {
 
     init (noport, &clientsocket);
 
-    //server_interaction (clientsocket);
+    server_interaction (clientsocket);
 
     close(clientsocket);
 

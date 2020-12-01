@@ -64,8 +64,8 @@ void service_loop (int lsocket, socklen_t *clientlen, book_t *books) {
 
     printf("Démarrage de la boucle de service...\n");
 
-    int nlsock;
-    char cmdname[CMDNAME_MAXSIZE];
+    int nlsock; // Descripteur de fichier du socket.
+    char cmdname[CMDNAME_MAXSIZE]; // Nom de la commande à faire.
 
     while (1) {
 
@@ -104,45 +104,49 @@ void read_command(int nlsock, char cmdname[CMDNAME_MAXSIZE], book_t *books) {
 
     if (!strcmp(cmdname, "reference") || !strcmp(cmdname, "ref")) {
         int ref;
+
         printf("Demande de référence... ");
+
+        // Lecture de la référence demandée par le client.
         read(nlsock, &ref, sizeof(int));
         printf("%d\n", ref);
 
+        // Récupération de l'indice du livre référé.
         int id = get_reference(ref, books);
+
+        // Envoie du livre auquel correspond la référence.
         write (nlsock, &(books[id]), sizeof(book_t));
 
     } else if (!strcmp(cmdname, "author")){
-        printf("Demande d'auteur... ");
-        char author[64];
-        
-        read(nlsock, author, 64);
-        printf("%s\n", author);
-        int tab[20];
-        printf("--------------------");
-        
-        printf("%ld", sizeof(*books));
 
-        for(int i = 0; i < 20 ; i++){
-            tab[i] = -1;
-        }
-        
+        char author[BOOK_AUT_SIZE]; // Nom de l'auteur.
+        int tab[sizeof(*books)]; // Tableau des indices des auteurs.
+        int i; // Remplissage du tableau par des -1 par défaut.
+        for (i = 0; i < sizeof(*books); tab[i++] = -1);
+
+        printf("Demande d'auteur... ");
+
+        // Lecture du nom de l'auteur depuis le client.
+        read(nlsock, author, BOOK_AUT_SIZE);
+
+        // Récupération du nombre de livres écrits par l'auteur.
         int booknumber = get_author(author, books, tab);
         printf("%d", booknumber);
 
+        // Envoi de ce nombre au client pour préparer sa boucle de réception.
         write(nlsock, &booknumber, sizeof(int));
 
+        // S'il n'y a pas de livre, on n'envoie rien de plus.
         if (booknumber != 0) {
-            for(int j = 0; j < booknumber; j++) {
+            int j;
+            for(j = 0; j < booknumber; j++)
                 write (nlsock, &(books[j]), sizeof(book_t));
-            }
         }
     }
 
+    // On remet le nom de la commande à zéro pour préparer les autres demandes client.
     memset(cmdname, 0, CMDNAME_MAXSIZE);
 }
-
-
-
 
 
 int main (int argc, char* argv[]) {
@@ -151,7 +155,7 @@ int main (int argc, char* argv[]) {
     socklen_t clientlen = (socklen_t) sizeof(address); // On récupère la taille de l'adresse du client.
 
     FILE *dbfile = open_database("books.csv"); // Récupération du document base de données.
-    const int ln = linesnb(dbfile) + 1;
+    const int ln = linesnb(dbfile) + 1; // Nombre de lignes dans le document i.e. le nombre de livres.
     if (ln < 0) {
         fprintf(stderr, "Le fichier BDD est vide !\n");
         exit(EXIT_FAILURE);

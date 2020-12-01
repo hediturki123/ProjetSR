@@ -40,10 +40,16 @@ void init (int noport, int *lsocket);
 * Le traitement s'effectue dans un sous-processus pour permettre à d'autres clients de se connecter au serveur.
 * @param lsocket Descripteur de fichier du socket d'écoute.
 * @param clientlen Taille de l'adresse du socket.
+* @param books Tableau des livres.
 */
 void service_loop (int lsocket, socklen_t *clientlen, book_t *books);
 
-
-void read_command(int nlsock, char commande[1024], book_t *books);
+/**
+ * Fonction d'interprétation des commandes envoyées par le client. Celle-ci associe un comportement spécifique à chaque nom de commande qu'elle reçoit.
+ * @param nlsock Descripteur de fichier du socket pour converser avec le client.
+ * @param cmdname Nom de la commande à interpréter.
+ * @param books Tableau des livres.
+ */
+void read_command(int nlsock, char cmdname[CMDNAME_MAXSIZE], book_t *books);
 
 #endif // __SERVER_H__

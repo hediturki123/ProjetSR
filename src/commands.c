@@ -10,15 +10,16 @@ int get_reference(int reference, book_t *books) {
     return -1;
 }
 
-int get_author(char author[64], book_t *books, int *tab) {
+int get_author(char author[BOOK_AUT_SIZE], book_t *books, int *tab) {
 
     int i;
-    int count = 0;
-    
+    int count = 0; // Compteur du nombre d'auteurs.
+
+    // Pour tout livre d'un auteur, on ajoute son indice dans le tableau tab.
     for (i = 0; i < sizeof(*books); i++) {
         if (!strcmp(books[i].author, author)) {
             tab[count] = i;
-            count++;        
+            count++;
         }
     }
     return count;

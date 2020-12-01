@@ -32,9 +32,12 @@ void init (int noport, int *clientsocket) {
 
 void server_interaction(int clientsocket) {
     //write and read
-    char buf[5] = "test";
+    char buf[50] = "test";
 
     write(clientsocket, buf, sizeof(buf));
+
+    read(clientsocket, buf, sizeof(buf));
+    printf("%s\n", buf);
 }
 
 int main(int argc, char *argv[]) {

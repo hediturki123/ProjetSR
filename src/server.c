@@ -1,5 +1,5 @@
 #include "server.h"
-
+#include <string.h>
 void end_child(int signo) {
     wait(NULL);
 }
@@ -89,6 +89,9 @@ void service_loop (int lsocket, socklen_t *clientlen) {
                     printf("Rien à lire\n");
                 }
                 printf("Lu (%d) : %s\n", rd, buf);
+                char msg[50] = "Le message lu par le seveur est : ";
+                strcat(msg, buf);
+                write(nlsock, msg, sizeof(msg));
 
                 // Le sous-processus se termine quand il a fait tout ce qu'il avait à faire.
                 exit(EXIT_SUCCESS);
